@@ -1,6 +1,13 @@
+const e = require("cors");
+
 class SudokuSolver {
 
   validate(puzzleString) {
+    if (puzzleString.length == 81) {
+      return true;
+    } else {
+      return false
+    }
   }
 
   checkRowPlacement(puzzleString, row, column, value) {
