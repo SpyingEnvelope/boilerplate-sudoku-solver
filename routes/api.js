@@ -8,6 +8,10 @@ module.exports = function (app) {
 
   app.route('/api/check')
     .post((req, res) => {
+      console.log(req.body);
+      let rowConflict = solver.checkRowPlacement(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
+      if (rowConflict == true) {res.json({'valid': 'true'})}
+      if (rowConflict == false) {res.json({'valid': 'false', 'conflict': 'row'})}
 
     });
     
