@@ -144,7 +144,36 @@ class SudokuSolver {
   }
 
   solve(puzzleString) {
-    
+    let rowsObject = {
+      'A': puzzleString.substr(0, 9), 
+      'B': puzzleString.substr(9, 9), 
+      'C': puzzleString.substr(18, 9), 
+      'D': puzzleString.substr(27, 9),
+      'E': puzzleString.substr(36, 9),
+      'F': puzzleString.substr(45, 9),
+      'G': puzzleString.substr(54, 9),
+      'H': puzzleString.substr(63, 9),
+      'I': puzzleString.substr(72, 9)
+      };
+
+    let potentialSolutions = {}
+
+      for (let row in rowsObject) {
+        for (let i = 1; i < 10; i++) {
+          if (rowsObject[row][i - 1] == '.') {
+            for (let j = 1; j < 10; j++) {
+              let rowChecker = this.checkRowPlacement(puzzleString, row, i, j);
+              let columnChecker = this.checkColPlacement(puzzleString, row, i, j);
+              let regionChecker = this.checkRegionPlacement(puzzleString, row, i, j);
+              if (rowChecker && columnChecker && regionChecker) {
+                potentialSolutions[row + i] ? potentialSolutions[row + i].push(j) : potentialSolutions[row + i] = [j];
+              }
+            }
+          }
+          // console.log('In ' + row + i + ' the value is ' + rowsObject[row][i - 1])
+        }
+      }
+      console.log(potentialSolutions);
   }
 }
 

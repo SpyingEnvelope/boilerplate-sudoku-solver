@@ -23,7 +23,6 @@ module.exports = function (app) {
         if (!rowConflict) { resObject['conflict'] = ['row']}
         if (!colConflict) { resObject['conflict'] ? resObject['conflict'].push('column') : resObject['conflict'] = ['column']}
         if (!boxConflict) { resObject['conflict'] ? resObject['conflict'].push('region') : resObject['conflict'] = ['region'] }
-        console.log(resObject)
         res.json(resObject);
       } else {
         res.json(resObject);
@@ -33,8 +32,8 @@ module.exports = function (app) {
     
   app.route('/api/solve')
     .post((req, res) => {
-      console.log(req.body.puzzle);
       if (solver.validate(req.body.puzzle)) {
+        solver.solve(req.body.puzzle);
         res.json({'solution': req.body.puzzle});
       } else if (!solver.validate(req.body.puzzle)) {
         res.json({'error': 'expected puzzle to be 81 characters long'})
