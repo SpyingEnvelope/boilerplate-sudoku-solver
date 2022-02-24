@@ -9,9 +9,25 @@ module.exports = function (app) {
   app.route('/api/check')
     .post((req, res) => {
       console.log(req.body);
+
+      let resObject = {
+        'valid': true
+      };
+
       let rowConflict = solver.checkRowPlacement(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
-      if (rowConflict == true) {res.json({'valid': 'true'})}
-      if (rowConflict == false) {res.json({'valid': 'false', 'conflict': 'row'})}
+      let colConflict = solver.checkColPlacement(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
+      let boxConflict = solver.checkRegionPlacement(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
+
+      if (!rowConflict || !colConflict || !boxConflict) {
+        resObject['valid'] = false
+        if (!rowConflict) { resObject['conflict'] = ['row']}
+        if (!colConflict) { resObject['conflict'] ? resObject['conflict'].push('column') : resObject['conflict'] = ['column']}
+        if (!boxConflict) { resObject['conflict'] ? resObject['conflict'].push('region') : resObject['conflict'] = ['region'] }
+        console.log(resObject)
+        res.json(resObject);
+      } else {
+        res.json(resObject);
+      }
 
     });
     
