@@ -156,24 +156,114 @@ class SudokuSolver {
       'I': puzzleString.substr(72, 9)
       };
 
-    let potentialSolutions = {}
+      let solutionObject = {
+        'A': puzzleString.substr(0, 9), 
+        'B': puzzleString.substr(9, 9), 
+        'C': puzzleString.substr(18, 9), 
+        'D': puzzleString.substr(27, 9),
+        'E': puzzleString.substr(36, 9),
+        'F': puzzleString.substr(45, 9),
+        'G': puzzleString.substr(54, 9),
+        'H': puzzleString.substr(63, 9),
+        'I': puzzleString.substr(72, 9)
+        };
 
-      for (let row in rowsObject) {
+    // Store solutions
+    let potentialSolutions = {};
+
+    // State management to see how many solutions over one there are
+    let solutionCounter = 1;
+
+    const solutionGenerator = () => {
+
+      let newPuzzle = [];
+      for (let key in solutionObject) {
+         newPuzzle.push(solutionObject[key]);
+          }
+
+          newPuzzle = newPuzzle.join("");
+
+      for (let row in solutionObject) {
         for (let i = 1; i < 10; i++) {
-          if (rowsObject[row][i - 1] == '.') {
+          if (solutionObject[row][i - 1] == '.') {
             for (let j = 1; j < 10; j++) {
-              let rowChecker = this.checkRowPlacement(puzzleString, row, i, j);
-              let columnChecker = this.checkColPlacement(puzzleString, row, i, j);
-              let regionChecker = this.checkRegionPlacement(puzzleString, row, i, j);
+
+              // let newPuzzle = [];
+              // for (let key in solutionObject) {
+              //    newPuzzle.push(solutionObject[key]);
+              //     }
+        
+              //     newPuzzle = newPuzzle.join("");
+
+              let rowChecker = this.checkRowPlacement(newPuzzle, row, i, j);
+              let columnChecker = this.checkColPlacement(newPuzzle, row, i, j);
+              let regionChecker = this.checkRegionPlacement(newPuzzle, row, i, j);
               if (rowChecker && columnChecker && regionChecker) {
                 potentialSolutions[row + i] ? potentialSolutions[row + i].push(j) : potentialSolutions[row + i] = [j];
+                // solutionObject[row] = solutionObject[row].replace(solutionObject[row][i - 1], j);
+                // break;
               }
             }
           }
+    }
+
+      // generate all possible solutions for each box
+      // for (let row in rowsObject) {
+      //   for (let i = 1; i < 10; i++) {
+      //     if (rowsObject[row][i - 1] == '.') {
+      //       for (let j = 1; j < 10; j++) {
+      //         let rowChecker = this.checkRowPlacement(puzzleString, row, i, j);
+      //         let columnChecker = this.checkColPlacement(puzzleString, row, i, j);
+      //         let regionChecker = this.checkRegionPlacement(puzzleString, row, i, j);
+      //         if (rowChecker && columnChecker && regionChecker) {
+      //           potentialSolutions[row + i] ? potentialSolutions[row + i].push(j) : potentialSolutions[row + i] = [j];
+      //         }
+      //       }
+      //     }
           // console.log('In ' + row + i + ' the value is ' + rowsObject[row][i - 1])
         }
       }
+
+      const solutionChecker = () => {
+      
+        let keyKeeper = Object.keys(potentialSolutions);
+  
+        for (let key in potentialSolutions) {
+          if (potentialSolutions[key].length == 1) {
+            console.log('this is key[0] ' + key[0] + ' and this is key[1] ' + key[1])
+            solutionCounter = solutionCounter + 1;
+            solutionObject[key[0]] = solutionObject[key[0]].replace(solutionObject[key[0]][key[1] - 1], potentialSolutions[key][0])
+          }
+          if (key == keyKeeper[keyKeeper.length - 1]) {
+            runSolutionGeneratorandChecker();
+          }
+        }
+      }
+  
+      const runSolutionGeneratorandChecker = () => {
+        if (solutionCounter != 0) {
+          solutionCounter = 0;
+          potentialSolutions = {};
+          solutionGenerator();
+          solutionChecker();
+          // runSolutionGeneratorandChecker();
+        }
+      }
+
+
+  
+      // solutionGenerator();
+      // let solution = [];
+      // for (let key in solutionObject) {
+      //   solution.push(solutionObject[key]);
+      // }
+
+      // solution = solution.join("");
+      runSolutionGeneratorandChecker();
       console.log(potentialSolutions);
+      console.log(solutionObject);
+      //console.log(solution);
+      //return solution;
   }
 }
 

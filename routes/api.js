@@ -33,8 +33,8 @@ module.exports = function (app) {
   app.route('/api/solve')
     .post((req, res) => {
       if (solver.validate(req.body.puzzle)) {
-        solver.solve(req.body.puzzle);
-        res.json({'solution': req.body.puzzle});
+        let solution = solver.solve(req.body.puzzle);
+        res.json({'solution': solution});
       } else if (!solver.validate(req.body.puzzle)) {
         res.json({'error': 'expected puzzle to be 81 characters long'})
       }
