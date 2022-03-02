@@ -157,31 +157,115 @@ class SudokuSolver {
       };
 
       let solutionObject = {
-        'A': puzzleString.substr(0, 9), 
-        'B': puzzleString.substr(9, 9), 
-        'C': puzzleString.substr(18, 9), 
-        'D': puzzleString.substr(27, 9),
-        'E': puzzleString.substr(36, 9),
-        'F': puzzleString.substr(45, 9),
-        'G': puzzleString.substr(54, 9),
-        'H': puzzleString.substr(63, 9),
-        'I': puzzleString.substr(72, 9)
+        'A': puzzleString.substr(0, 9).split(""), 
+        'B': puzzleString.substr(9, 9).split(""), 
+        'C': puzzleString.substr(18, 9).split(""), 
+        'D': puzzleString.substr(27, 9).split(""),
+        'E': puzzleString.substr(36, 9).split(""),
+        'F': puzzleString.substr(45, 9).split(""),
+        'G': puzzleString.substr(54, 9).split(""),
+        'H': puzzleString.substr(63, 9).split(""),
+        'I': puzzleString.substr(72, 9).split("")
         };
 
+      
+      console.log(solutionObject);
+
+      let emptySpaces = [];
+
+      for (let key in rowsObject) {
+        for (let i = 0; i < 9; i++) {
+          if (rowsObject[key][i] == '.') {
+            emptySpaces.push(key + i);
+          }
+        }
+      }
+
+      console.log(emptySpaces);
+
+      const generateSolution = (emptyCell, i) => {
+
+        let row = emptyCell[0];
+        let column = parseInt(emptyCell[1]) + 1;
+
+        for (i; i < 10; i++) {
+          // Generate new puzzle string
+          let newPuzzle = [];
+          for (let key in solutionObject) {
+            let joinedArr = solutionObject[key].join("");
+            newPuzzle.push(joinedArr);
+          }
+          newPuzzle = newPuzzle.join("");
+          console.log('I am under new puzzle ' + newPuzzle);
+          console.log('this is the row ' + row);
+          console.log('this is the column ' + column)
+          console.log('this is the empty cell ' + emptyCell);
+          console.log('this is the index of empty cell ' + emptySpaces.indexOf(emptyCell))
+          console.log('this is the i value ' + i);
+
+          if (emptySpaces.indexOf(emptyCell) == emptySpaces.length - 1) {
+            console.log('I am at the last if')
+            let rowChecker = this.checkRowPlacement(newPuzzle, row, column, i);
+            let columnChecker = this.checkColPlacement(newPuzzle, row, column , i);
+            let regionChecker = this.checkRegionPlacement(newPuzzle, row, column, i);
+            if (rowChecker && columnChecker && regionChecker) {
+              console.log('I am at the last constraint pass')
+              solutionObject[row][column - 1] = i;
+              let solution = [];
+              for (let key in solutionObject) {
+                let joinedArr = solutionObject[key].join("");
+                solution.push(joinedArr);
+              }
+              solution = solution.join("");
+              console.log('I finished the puzzle ' + solution);
+              return solution;
+            }
+            continue;
+          }
+
+          let rowChecker = this.checkRowPlacement(newPuzzle, row, column, i);
+          let columnChecker = this.checkColPlacement(newPuzzle, row, column, i);
+          let regionChecker = this.checkRegionPlacement(newPuzzle, row, column, i);
+          if (rowChecker && columnChecker && regionChecker) {
+            console.log('I am at the if if all constraints pass');
+            // Place the potential solution
+            solutionObject[row][column - 1] = i;
+            let emptyIndex = emptySpaces.indexOf(emptyCell);
+            return generateSolution(emptySpaces[emptyIndex + 1], 1);
+          }
+          if (i == 9) {
+            console.log('I am at the if if all constraints fail and i == 9')
+            let index = emptySpaces.indexOf(emptyCell);
+            let currentValue = solutionObject[emptySpaces[index - 1][0]][emptySpaces[index - 1][1]];
+            console.log(currentValue);
+            solutionObject[emptySpaces[index - 1][0]][emptySpaces[index - 1][1]] = '.';
+            if (currentValue == 9) {
+              console.log('I am at current value 9')
+              let value = solutionObject[emptySpaces[index - 2][0]][emptySpaces[index - 2][1]];
+              console.log('this is the value (not currentValue) ' + value);
+              solutionObject[emptySpaces[index - 2][0]][emptySpaces[index - 2][1]] = '.';
+              return generateSolution(emptySpaces[index - 2], value + 1);
+            }
+            return generateSolution(emptySpaces[index - 1], currentValue + 1);
+          }
+        }
+
+      }
+
     // Store solutions
-    let potentialSolutions = {};
+    // let potentialSolutions = {};
 
     // State management to see how many solutions over one there are
-    let solutionCounter = 1;
+    // let solutionCounter = 1;
 
     const solutionGenerator = () => {
 
-      let newPuzzle = [];
-      for (let key in solutionObject) {
-         newPuzzle.push(solutionObject[key]);
-          }
+      // let newPuzzle = [];
+      // for (let key in solutionObject) {
+      //    newPuzzle.push(solutionObject[key]);
+      //     }
 
-          newPuzzle = newPuzzle.join("");
+      //     newPuzzle = newPuzzle.join("");
 
       for (let row in solutionObject) {
         for (let i = 1; i < 10; i++) {
@@ -259,11 +343,13 @@ class SudokuSolver {
       // }
 
       // solution = solution.join("");
-      runSolutionGeneratorandChecker();
-      console.log(potentialSolutions);
-      console.log(solutionObject);
+      // runSolutionGeneratorandChecker();
+      // console.log(potentialSolutions);
+      // console.log(solutionObject);
       //console.log(solution);
       //return solution;
+      let solution = generateSolution(emptySpaces[0], 1);
+      return solution;
   }
 }
 
