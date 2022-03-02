@@ -177,6 +177,7 @@ class SudokuSolver {
         let row = emptyCell[0];
         let column = parseInt(emptyCell[1]) + 1;
 
+        // if the last value was nine, move back another empty space
         if (i == 10) {
           console.log('I am at i == 10')
           let index = emptySpaces.indexOf(emptyCell);
@@ -201,29 +202,26 @@ class SudokuSolver {
           console.log('this is the index of empty cell ' + emptySpaces.indexOf(emptyCell))
           console.log('this is the i value ' + i);
 
-          if (emptySpaces.indexOf(emptyCell) == emptySpaces.length - 1) {
-            console.log('I am at the last if')
-            let rowChecker = this.checkRowPlacement(newPuzzle, row, column, i);
-            let columnChecker = this.checkColPlacement(newPuzzle, row, column , i);
-            let regionChecker = this.checkRegionPlacement(newPuzzle, row, column, i);
-            if (rowChecker && columnChecker && regionChecker) {
-              console.log('I am at the last constraint pass')
-              solutionObject[row][column - 1] = i;
-              let solution = [];
-              for (let key in solutionObject) {
-                let joinedArr = solutionObject[key].join("");
-                solution.push(joinedArr);
-              }
-              solution = solution.join("");
-              console.log('I finished the puzzle ' + solution);
-              return solution;
-            }
-            continue;
-          }
-
+          // validate which i passes all constraints
           let rowChecker = this.checkRowPlacement(newPuzzle, row, column, i);
           let columnChecker = this.checkColPlacement(newPuzzle, row, column, i);
           let regionChecker = this.checkRegionPlacement(newPuzzle, row, column, i);
+
+          // if it passes all constraints and it is the last empty cell, generate the solution after filling it in
+          if (rowChecker && columnChecker && regionChecker && emptySpaces.indexOf(emptyCell) == emptySpaces.length - 1) {
+            console.log('I am at the last if constraint pass')
+            solutionObject[row][column - 1] = i;
+            let solution = [];
+            for (let key in solutionObject) {
+              let joinedArr = solutionObject[key].join("");
+              solution.push(joinedArr);
+            }
+            solution = solution.join("");
+            console.log('I finished the puzzle ' + solution);
+            return solution;
+          }
+
+          //if it passes all constraints and it is not the last empty cell, move onto the next iteration after filling in
           if (rowChecker && columnChecker && regionChecker) {
             console.log('I am at the if if all constraints pass');
             // Place the potential solution
@@ -231,121 +229,20 @@ class SudokuSolver {
             let emptyIndex = emptySpaces.indexOf(emptyCell);
             return generateSolution(emptySpaces[emptyIndex + 1], 1);
           }
+
+          //if none of the numbers 1-9 pass constraints, move back an empty space, increase its i value by one, and run the function again
           if (i == 9) {
             console.log('I am at the if if all constraints fail and i == 9')
             let index = emptySpaces.indexOf(emptyCell);
             let currentValue = solutionObject[emptySpaces[index - 1][0]][emptySpaces[index - 1][1]];
             console.log(currentValue);
             solutionObject[emptySpaces[index - 1][0]][emptySpaces[index - 1][1]] = '.';
-/*           if (currentValue == 9) {
-              console.log('I am at current value 9')
-              let value = solutionObject[emptySpaces[index - 2][0]][emptySpaces[index - 2][1]];
-              console.log('this is the value (not currentValue) ' + value);
-              solutionObject[emptySpaces[index - 2][0]][emptySpaces[index - 2][1]] = '.';
-              return generateSolution(emptySpaces[index - 2], value + 1);
-            } */
             return generateSolution(emptySpaces[index - 1], currentValue + 1);
           }
         }
 
       }
 
-    // Store solutions
-    // let potentialSolutions = {};
-
-    // State management to see how many solutions over one there are
-    // let solutionCounter = 1;
-
-    const solutionGenerator = () => {
-
-      // let newPuzzle = [];
-      // for (let key in solutionObject) {
-      //    newPuzzle.push(solutionObject[key]);
-      //     }
-
-      //     newPuzzle = newPuzzle.join("");
-
-      for (let row in solutionObject) {
-        for (let i = 1; i < 10; i++) {
-          if (solutionObject[row][i - 1] == '.') {
-            for (let j = 1; j < 10; j++) {
-
-              // let newPuzzle = [];
-              // for (let key in solutionObject) {
-              //    newPuzzle.push(solutionObject[key]);
-              //     }
-        
-              //     newPuzzle = newPuzzle.join("");
-
-              let rowChecker = this.checkRowPlacement(newPuzzle, row, i, j);
-              let columnChecker = this.checkColPlacement(newPuzzle, row, i, j);
-              let regionChecker = this.checkRegionPlacement(newPuzzle, row, i, j);
-              if (rowChecker && columnChecker && regionChecker) {
-                potentialSolutions[row + i] ? potentialSolutions[row + i].push(j) : potentialSolutions[row + i] = [j];
-                // solutionObject[row] = solutionObject[row].replace(solutionObject[row][i - 1], j);
-                // break;
-              }
-            }
-          }
-    }
-
-      // generate all possible solutions for each box
-      // for (let row in rowsObject) {
-      //   for (let i = 1; i < 10; i++) {
-      //     if (rowsObject[row][i - 1] == '.') {
-      //       for (let j = 1; j < 10; j++) {
-      //         let rowChecker = this.checkRowPlacement(puzzleString, row, i, j);
-      //         let columnChecker = this.checkColPlacement(puzzleString, row, i, j);
-      //         let regionChecker = this.checkRegionPlacement(puzzleString, row, i, j);
-      //         if (rowChecker && columnChecker && regionChecker) {
-      //           potentialSolutions[row + i] ? potentialSolutions[row + i].push(j) : potentialSolutions[row + i] = [j];
-      //         }
-      //       }
-      //     }
-          // console.log('In ' + row + i + ' the value is ' + rowsObject[row][i - 1])
-        }
-      }
-
-      const solutionChecker = () => {
-      
-        let keyKeeper = Object.keys(potentialSolutions);
-  
-        for (let key in potentialSolutions) {
-          if (potentialSolutions[key].length == 1) {
-            console.log('this is key[0] ' + key[0] + ' and this is key[1] ' + key[1])
-            solutionCounter = solutionCounter + 1;
-            solutionObject[key[0]] = solutionObject[key[0]].replace(solutionObject[key[0]][key[1] - 1], potentialSolutions[key][0])
-          }
-          if (key == keyKeeper[keyKeeper.length - 1]) {
-            runSolutionGeneratorandChecker();
-          }
-        }
-      }
-  
-      const runSolutionGeneratorandChecker = () => {
-        if (solutionCounter != 0) {
-          solutionCounter = 0;
-          potentialSolutions = {};
-          solutionGenerator();
-          solutionChecker();
-          // runSolutionGeneratorandChecker();
-        }
-      }
-
-
-  
-      // solutionGenerator();
-      // let solution = [];
-      // for (let key in solutionObject) {
-      //   solution.push(solutionObject[key]);
-      // }
-
-      // solution = solution.join("");
-      // runSolutionGeneratorandChecker();
-      // console.log(potentialSolutions);
-      // console.log(solutionObject);
-      //console.log(solution);
-      //return solution;
       let solution = generateSolution(emptySpaces[0], 1);
       return solution;
   }
