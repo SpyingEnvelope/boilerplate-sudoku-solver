@@ -1,5 +1,6 @@
 'use strict';
 
+const express = require('express');
 const { send } = require('express/lib/response');
 const SudokuSolver = require('../controllers/sudoku-solver.js');
 
@@ -32,7 +33,11 @@ module.exports = function (app) {
     
   app.route('/api/solve')
     .post((req, res) => {
-      if (solver.validate(req.body.puzzle)) {
+      if(!req.body.puzzle) {
+        res.json({'error': 'Required field missing'})
+      } else if (solver.validate(req.body.puzzle) == 'invalid'){
+        res.json({'error': 'Invalid characters in puzzle'})
+      } else if (solver.validate(req.body.puzzle)) {
         let solution = solver.solve(req.body.puzzle);
         res.json({'solution': solution});
       } else if (!solver.validate(req.body.puzzle)) {

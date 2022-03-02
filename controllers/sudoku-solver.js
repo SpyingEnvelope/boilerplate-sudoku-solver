@@ -4,6 +4,14 @@ const res = require("express/lib/response");
 class SudokuSolver {
 
   validate(puzzleString) {
+
+    const validateRegex = /[1-9|\.]/;
+
+    for (let i = 0; i < puzzleString.length; i++) {
+      if (validateRegex.test(puzzleString[i])) { continue; }
+      if (!validateRegex.test(puzzleString[i])) { return 'invalid'; }
+    };
+
     if (puzzleString.length == 81) {
       return true;
     } else {
