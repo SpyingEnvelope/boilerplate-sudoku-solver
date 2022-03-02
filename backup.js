@@ -144,6 +144,17 @@ class SudokuSolver {
   }
 
   solve(puzzleString) {
+    let rowsObject = {
+      'A': puzzleString.substr(0, 9), 
+      'B': puzzleString.substr(9, 9), 
+      'C': puzzleString.substr(18, 9), 
+      'D': puzzleString.substr(27, 9),
+      'E': puzzleString.substr(36, 9),
+      'F': puzzleString.substr(45, 9),
+      'G': puzzleString.substr(54, 9),
+      'H': puzzleString.substr(63, 9),
+      'I': puzzleString.substr(72, 9)
+      };
 
       let solutionObject = {
         'A': puzzleString.substr(0, 9).split(""), 
@@ -162,9 +173,9 @@ class SudokuSolver {
 
       let emptySpaces = [];
 
-      for (let key in solutionObject) {
+      for (let key in rowsObject) {
         for (let i = 0; i < 9; i++) {
-          if (solutionObject[key][i] == '.') {
+          if (rowsObject[key][i] == '.') {
             emptySpaces.push(key + i);
           }
         }
@@ -176,15 +187,6 @@ class SudokuSolver {
 
         let row = emptyCell[0];
         let column = parseInt(emptyCell[1]) + 1;
-
-        if (i == 10) {
-          console.log('I am at i == 10')
-          let index = emptySpaces.indexOf(emptyCell);
-          let currentValue = solutionObject[emptySpaces[index - 1][0]][emptySpaces[index - 1][1]];
-          console.log(currentValue);
-          solutionObject[emptySpaces[index - 1][0]][emptySpaces[index - 1][1]] = '.';
-          return generateSolution(emptySpaces[index - 1], currentValue + 1);
-        }
 
         for (i; i < 10; i++) {
           // Generate new puzzle string
@@ -237,13 +239,13 @@ class SudokuSolver {
             let currentValue = solutionObject[emptySpaces[index - 1][0]][emptySpaces[index - 1][1]];
             console.log(currentValue);
             solutionObject[emptySpaces[index - 1][0]][emptySpaces[index - 1][1]] = '.';
-/*           if (currentValue == 9) {
+            if (currentValue == 9) {
               console.log('I am at current value 9')
               let value = solutionObject[emptySpaces[index - 2][0]][emptySpaces[index - 2][1]];
               console.log('this is the value (not currentValue) ' + value);
               solutionObject[emptySpaces[index - 2][0]][emptySpaces[index - 2][1]] = '.';
               return generateSolution(emptySpaces[index - 2], value + 1);
-            } */
+            }
             return generateSolution(emptySpaces[index - 1], currentValue + 1);
           }
         }
