@@ -15,11 +15,14 @@ module.exports = function (app) {
         'valid': true
       };
 
+      let samePlacement = solver.checkSameLocation(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
       let rowConflict = solver.checkRowPlacement(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
       let colConflict = solver.checkColPlacement(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
       let boxConflict = solver.checkRegionPlacement(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
 
-      if (!rowConflict || !colConflict || !boxConflict) {
+      if (samePlacement) { 
+        res.json(resObject)
+      } else if (!rowConflict || !colConflict || !boxConflict) {
         resObject['valid'] = false
         if (!rowConflict) { resObject['conflict'] = ['row']}
         if (!colConflict) { resObject['conflict'] ? resObject['conflict'].push('column') : resObject['conflict'] = ['column']}

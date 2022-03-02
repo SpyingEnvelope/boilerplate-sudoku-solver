@@ -19,6 +19,96 @@ class SudokuSolver {
     }
   }
 
+  checkSameLocation(puzzleString, row, column, value) {
+
+    let parsedColumn = parseInt(column) - 1;
+    console.log(parsedColumn)
+    
+    let rowObject = {
+      'A': puzzleString.substr(0, 9), 
+      'B': puzzleString.substr(9, 9), 
+      'C': puzzleString.substr(18, 9), 
+      'D': puzzleString.substr(27, 9),
+      'E': puzzleString.substr(36, 9),
+      'F': puzzleString.substr(45, 9),
+      'G': puzzleString.substr(54, 9),
+      'H': puzzleString.substr(63, 9),
+      'I': puzzleString.substr(72, 9)
+      };
+
+      console.log('I am under row object')
+
+      let matchCounter = 0;
+  
+      if (rowObject[row][parsedColumn] == value) {
+        for (let i = 0; i < 9; i++) {
+          if (rowObject[row][i] == value) {
+            console.log('I matched a row!')
+            matchCounter = matchCounter + 1;
+          }
+        }
+      
+      console.log('I am under row check')
+
+      for (let key in rowObject) {
+        if (rowObject[key][parsedColumn] == value) {
+          console.log('I matched a column!')
+          matchCounter = matchCounter + 1;
+        }
+      }
+
+    console.log('I am under column check')
+
+      const rowGroups = {
+        1: ['A', 'B', 'C'],
+        2: ['D', 'E', 'F'],
+        3: ['G', 'H', 'I']
+      }
+
+      if (parsedColumn < 3) {
+        for (let key in rowGroups) {
+          if (rowGroups[key].indexOf(row) != -1) {
+            if (rowObject[rowGroups[key][0]][0] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][0]][1] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][0]][2] == value) {
+              matchCounter = matchCounter + 1;
+            }
+            if (rowObject[rowGroups[key][1]][0] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][1]][1] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][1]][2] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][2]][0] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][2]][1] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][2]][2] == value) {
+              matchCounter++;
+            }
+          }
+        }
+      }
+
+      console.log(matchCounter);
+      
+        if (matchCounter == 3) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+  }
+
   checkRowPlacement(puzzleString, row, column, value) {
     let rowObject = {
     'A': puzzleString.substr(0, 9), 
