@@ -99,6 +99,74 @@ class SudokuSolver {
         }
       }
 
+      if (parsedColumn < 6) {
+        for (let key in rowGroups) {
+          if (rowGroups[key].indexOf(row) != -1) {
+            if (rowObject[rowGroups[key][0]][3] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][0]][4] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][0]][5] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][1]][3] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][1]][4] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][1]][5] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][2]][3] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][2]][4] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][2]][5] == value) {
+              matchCounter++;
+            }
+          }
+        }
+      }
+
+      if (parsedColumn < 9) {
+        for (let key in rowGroups) {
+          if (rowGroups[key].indexOf(row) != -1) {
+            if (rowObject[rowGroups[key][0]][6] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][0]][7] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][0]][8] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][1]][6] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][1]][7] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][1]][8] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][2]][6] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][2]][7] == value) {
+              matchCounter++;
+            }
+            if (rowObject[rowGroups[key][2]][8] == value) {
+              matchCounter++;
+            }
+          }
+        }
+      }
+
       console.log(matchCounter);
       
         if (matchCounter == 3) {
