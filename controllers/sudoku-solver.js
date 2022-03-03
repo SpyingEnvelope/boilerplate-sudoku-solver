@@ -396,6 +396,12 @@ class SudokuSolver {
             return generateSolution(emptySpaces[emptyIndex + 1], 1);
           }
 
+
+          //If all constraints fail for all numbers and the algorithm is at the first index return unsolved for puzzle cannot be solved
+          if (emptySpaces.indexOf(emptyCell) == 0 && i == 9) {
+            return 'unsolved';
+          }
+
           //if none of the numbers 1-9 pass constraints, move back an empty space, increase its i value by one, and run the function again
           if (i == 9) {
             console.log('I am at the if if all constraints fail and i == 9')

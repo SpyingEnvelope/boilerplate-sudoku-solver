@@ -40,11 +40,12 @@ module.exports = function (app) {
         res.json({'error': 'Required field missing'})
       } else if (solver.validate(req.body.puzzle) == 'invalid'){
         res.json({'error': 'Invalid characters in puzzle'})
-      } else if (solver.validate(req.body.puzzle)) {
-        let solution = solver.solve(req.body.puzzle);
-        res.json({'solution': solution});
       } else if (!solver.validate(req.body.puzzle)) {
         res.json({'error': 'expected puzzle to be 81 characters long'})
+      } else if (solver.validate(req.body.puzzle)) {
+        let solution = solver.solve(req.body.puzzle);
+        if (solution == 'unsolved') { res.json({'error': 'Puzzle cannot be solved'})}
+        else res.json({'solution': solution});
       }
 
     });
