@@ -36,28 +36,24 @@ class SudokuSolver {
       'I': puzzleString.substr(72, 9)
       };
 
-      console.log('I am under row object')
-
       let matchCounter = 0;
+
+      if (rowObject[row][parsedColumn] != value && rowObject[row][parsedColumn] != '.') {
+        return 'num exists already';
+      }
   
       if (rowObject[row][parsedColumn] == value) {
         for (let i = 0; i < 9; i++) {
           if (rowObject[row][i] == value) {
-            console.log('I matched a row!')
             matchCounter = matchCounter + 1;
           }
         }
-      
-      console.log('I am under row check')
 
       for (let key in rowObject) {
         if (rowObject[key][parsedColumn] == value) {
-          console.log('I matched a column!')
           matchCounter = matchCounter + 1;
         }
       }
-
-    console.log('I am under column check')
 
       const rowGroups = {
         1: ['A', 'B', 'C'],
@@ -99,7 +95,7 @@ class SudokuSolver {
         }
       }
 
-      if (parsedColumn < 6) {
+      else if (parsedColumn < 6) {
         for (let key in rowGroups) {
           if (rowGroups[key].indexOf(row) != -1) {
             if (rowObject[rowGroups[key][0]][3] == value) {
@@ -133,7 +129,7 @@ class SudokuSolver {
         }
       }
 
-      if (parsedColumn < 9) {
+      else if (parsedColumn < 9) {
         for (let key in rowGroups) {
           if (rowGroups[key].indexOf(row) != -1) {
             if (rowObject[rowGroups[key][0]][6] == value) {

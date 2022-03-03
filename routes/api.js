@@ -20,7 +20,11 @@ module.exports = function (app) {
       let colConflict = solver.checkColPlacement(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
       let boxConflict = solver.checkRegionPlacement(req.body.puzzle, req.body.coordinate[0], req.body.coordinate[1], req.body.value);
 
-      if (samePlacement) { 
+      if (samePlacement == 'num exists already') {
+        resObject['valid'] = false;
+        resObject['conflict'] = ['row', 'column', 'region'];
+        res.json(resObject);
+      } else if (samePlacement) { 
         res.json(resObject)
       } else if (!rowConflict || !colConflict || !boxConflict) {
         resObject['valid'] = false
