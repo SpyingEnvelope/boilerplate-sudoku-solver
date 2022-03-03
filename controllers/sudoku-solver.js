@@ -5,6 +5,10 @@ class SudokuSolver {
 
   validate(puzzleString) {
 
+    if (!puzzleString) {
+      return false;
+    }
+
     const validateRegex = /[1-9|\.]/;
 
     for (let i = 0; i < puzzleString.length; i++) {
