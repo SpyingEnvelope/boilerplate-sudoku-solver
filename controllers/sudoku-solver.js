@@ -327,12 +327,24 @@ class SudokuSolver {
       console.log(solutionObject);
 
       let emptySpaces = [];
+      let filledSpaces = [];
 
       for (let key in solutionObject) {
         for (let i = 0; i < 9; i++) {
           if (solutionObject[key][i] == '.') {
             emptySpaces.push(key + i);
+          } else {
+            filledSpaces.push(key + (i + 1) + solutionObject[key][i]);
           }
+        }
+      }
+
+      console.log(filledSpaces);
+
+      for (let i = 0; i < filledSpaces.length; i++) {
+        let result = this.checkSameLocation(puzzleString, filledSpaces[i][0], filledSpaces[i][1], filledSpaces[i][2]);
+        if (!result) {
+          return 'unsolved';
         }
       }
 
@@ -343,6 +355,11 @@ class SudokuSolver {
         let row = emptyCell[0];
         let column = parseInt(emptyCell[1]) + 1;
 
+        // if you're at the first cell and i equals 10, return unsolved
+        if (emptySpaces.indexOf(emptyCell) == 0 && i == 10) {
+          return 'unsolved';
+        }
+        
         // if the last value was nine, move back another empty space
         if (i == 10) {
           console.log('I am at i == 10')
