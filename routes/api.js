@@ -21,6 +21,10 @@ module.exports = function (app) {
 
       if (!req.body.puzzle || !req.body.coordinate || !req.body.value) {
         res.json({'error': 'Required field(s) missing'});
+      } else if (!solver.validate(req.body.puzzle)) {
+        res.json({'error': 'Expected puzzle to be 81 characters long'});
+      } else if (solver.validate(req.body.puzzle) == 'invalid') {
+        res.json({'error': 'Invalid characters in puzzle'});
       } else if (!coordinateRegex.test(req.body.coordinate)) {
         res.json({'error': 'Invalid coordinate'});
       } else if (!valueRegex.test(req.body.value)) {
@@ -59,7 +63,7 @@ module.exports = function (app) {
       } else if (solver.validate(req.body.puzzle) == 'invalid'){
         res.json({'error': 'Invalid characters in puzzle'})
       } else if (!solver.validate(req.body.puzzle)) {
-        res.json({'error': 'expected puzzle to be 81 characters long'})
+        res.json({'error': 'Expected puzzle to be 81 characters long'})
       } else if (solver.validate(req.body.puzzle)) {
         let solution = solver.solve(req.body.puzzle);
         if (solution == 'unsolved') { res.json({'error': 'Puzzle cannot be solved'})}

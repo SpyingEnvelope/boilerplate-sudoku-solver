@@ -59,7 +59,7 @@ suite('Functional Tests', () => {
             })
             .end((err, res) => {
                 assert.equal(res.status, 200);
-                assert.equal(res.body['error'], 'expected puzzle to be 81 characters long');
+                assert.equal(res.body['error'], 'Expected puzzle to be 81 characters long');
                 done();
             })
     })
@@ -175,18 +175,33 @@ suite('Functional Tests', () => {
             .request(server)
             .post('/api/check')
             .send({
-                'puzzle': '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..',
-                'coordinate': 'K2',
+                'puzzle': '..9..5.1.85.4....2432w.+...1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..',
+                'coordinate': 'I2',
                 'value': '5'
             })
             .end((err, res) => {
                 assert.equal(res.status, 200);
-                assert.equal(res.body['error'], 'Invalid coordinate');
+                assert.equal(res.body['error'], 'Invalid characters in puzzle');
                 done();
             })
     })
 
     //test #12 'Check a puzzle placement with incorrect length: POST request to /api/check'
+    test('Check a puzzle placement with invalid characters: POST request to /api/check', (done) => {
+        chai
+            .request(server)
+            .post('/api/check')
+            .send({
+                'puzzle': '..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6',
+                'coordinate': 'I2',
+                'value': '5'
+            })
+            .end((err, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body['error'], 'Expected puzzle to be 81 characters long');
+                done();
+            })
+    })
 
 
     //test #13
